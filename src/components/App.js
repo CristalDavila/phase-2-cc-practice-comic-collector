@@ -1,7 +1,28 @@
 import ComicsContainer from "./ComicsContainer"
 import ComicForm from "./ComicForm"
+import { useEffect, useState } from "react";
+
 
 function App() {
+
+  const [comics, setComics] = useState([])
+
+  useEffect(() => {
+    fetch("http://localhost:8004/comics")
+      .then(r => r.json())
+      .then(data => setComics(data))
+  }, [])
+
+function addComic(newComic){
+  //console.log(newComic)
+  setComics([...comics, newComic])
+}
+function removeComic(comicToRemove){
+  const filteredComics = comics.filter(comic => comic.id !== comicToRemove.id)
+  setComics(filteredComics)
+
+}
+
   return (
     <div className="App">
 
@@ -10,11 +31,11 @@ function App() {
       <div className="grid with-sidebar">
 
         <div className="flex-container">
-          <ComicsContainer />
+        <ComicsContainer comics={comics} removeComic={removeComic}/>
         </div>
 
         <div className="sidebar">
-          <ComicForm />
+          <ComicForm addComic={addComic}/>
         </div>
 
       </div>

@@ -1,16 +1,32 @@
-function Comic() {
+import { useState } from 'react'
+
+function Comic({comic, removeComic}) {
+
+  const [renderImage, setRenderImage] = useState(true)
+
+  function toggleRenderImage() {
+    setRenderImage(prev => !prev)
+  }
+
+  function handleRemove() {
+    removeComic(comic)
+    fetch(`http://localhost:8004/comics/${comic.id}`, { method: 'DELETE' })
+  }
 
   return (
     <div className="comic-item">
 
-      {/* The image should render if the details aren't displayed */}
-      <img src={"#"} alt={"Comic Issue Image"} />
-
-      {/* The details should render if the image isn't displayed */}
-      <h3>{"Title"}</h3>
-      <h4>{"Issue No."}</h4>
-      <button>Remove</button>
-
+      {
+        renderImage
+        ?
+        <img src={comic.image_url} alt={`Cover for ${comic.title}`} onClick={toggleRenderImage} />
+        :
+        <>
+        <h3 onClick={toggleRenderImage}>{comic.title}</h3>
+        <h4 onClick={toggleRenderImage}>{comic.issue}</h4>
+        <button onClick={handleRemove}>Remove</button>
+        </>
+      }
     </div>
   )
 
